@@ -1,4 +1,4 @@
-# Small Steps — IELTS Practice Lab v2
+# Small Steps — IELTS Practice Lab v3
 
 A four-week original IELTS-style practice bank for an Academic IELTS 6.5+ goal. The goal is not a score guarantee. There are 152 auto-scored questions (48 reading, 48 listening, 24 grammar, 32 vocabulary), eight full writing assignments (four Task 1, four Task 2) with planning/revision work, and 36 speaking prompts across Parts 1–3. The 88 activity views include annotation, synthesis, dictation, shadowing, paraphrasing, flashcards, error review and reflection. This is not a full IELTS mock test.
 
@@ -23,7 +23,7 @@ Choose one or two activities per 35–45 minute session. These are substantial m
 
 All auto-scored questions include explanatory evidence. First-attempt correctness is retained separately from latest results. Wrong latest answers enter the error notebook. Repeating the same question tests recall and is explicitly labelled as review, not a new score. All questions in a set must be answered before grading. Typed completion answers are matched against curated answer aliases with case/spacing normalisation; the app does not infer unseen synonyms.
 
-Writing includes tables of original practice data, argument maps, drafts, self-checks, revisions and change logs. Local checks count words/paragraphs and flag long sentences for review. They do not assess grammar, argument quality, or IELTS bands. The copy button prepares a detailed feedback request for chat. Speaking provides prompt navigation, notes, preparation timer, recording and reflection; audio must be supplied to chat for pronunciation/fluency review. No AI backend, automatic transcription, or band prediction is included.
+Writing includes tables of original practice data, argument maps, drafts, self-checks, revisions and change logs. Local checks count words/paragraphs and flag long sentences for review. They do not assess grammar, argument quality, or IELTS bands. The ChatGPT button prepares a detailed, evidence-based feedback request containing the real prompt, draft, revision and data, then opens ChatGPT with a prefill attempt and clipboard/manual-copy fallback. Speaking provides prompt navigation, notes, preparation timer, recording and reflection; audio must be supplied to chat for pronunciation/fluency review. AI feedback and voice conversation happen in the learner’s own ChatGPT account via explicit handoff. No API key or paid API backend is required. Website checks still do not predict bands or transcribe audio automatically.
 
 ## Audio and privacy
 
@@ -44,3 +44,21 @@ node /workspace/Project-1/tests/ielts-studio-smoke.cjs
 ```
 
 The cloud machine supplies Playwright and system Chromium. On other machines, install Playwright in a separate test tools directory (no app runtime dependencies), make it resolvable by Node, and set `IELTS_CHROMIUM_PATH` to an installed Chromium executable. `IELTS_STUDIO_TEST_URL` overrides the default local test URL. Additional current-instance checks exercised MediaRecorder with synthetic input, the 60-second cue-card timer, legacy draft retention, and storage-failure messaging; these do not prove physical microphone availability.
+
+## ChatGPT Coach (using the existing ChatGPT plan)
+
+- Writing: open a draft/revision activity and select “Buka ChatGPT untuk feedback AI”. Empty drafts are blocked. The full assignment, table where relevant, draft and revision are included.
+- Other open answers: select the desired field in the ChatGPT Coach section. Reading reviews include the reference passage; paraphrase reviews include source material. Short exercises explicitly request qualitative feedback rather than an overall IELTS band.
+- Speaking: select Part 1, 2 or 3, then Coach or Mock examiner. Open ChatGPT, send the prepared prompt, then use the Voice/waveform button in ChatGPT and permit its microphone access. The partner is instructed to ask one question at a time and adapt to actual replies. Voice happens in ChatGPT, not inside this website. Account limits and feature availability apply.
+- Recorded speaking: download the local recording and attach it manually in ChatGPT if supported by the account. A feedback prompt explicitly forbids assessing unheard audio and requests transcript-only feedback when audio analysis is unavailable.
+- Return: paste received feedback and next assignments into the Coach panel. These are saved separately per module in existing progress storage and included in export/import. There is no automatic transfer of ChatGPT responses into the website.
+
+Clicking a handoff button intentionally opens ChatGPT with learner context. For reasonably sized prompts the app uses `https://chatgpt.com/?q=...` to try prefilling the composer; this third-party behaviour is not guaranteed. The full prompt is also copied (when permission permits) and available in a selectable textarea. Long prompts use the plain ChatGPT URL with clipboard/manual fallback. If a popup is blocked, a regular link is shown. No login credentials, API keys or recordings are inserted into these links. Log in directly on ChatGPT with the existing subscription. ChatGPT subscription access is separate from API billing; this implementation uses no API.
+
+Test the handoff UI while the local server runs:
+
+```sh
+node /workspace/Project-1/tests/chatgpt-coach-smoke.cjs
+```
+
+The test intercepts ChatGPT navigation locally so sample essays are never sent externally. It covers actual answer/reference inclusion, writing rubrics and revisions, open-answer safeguards, voice setup prompts, audio caveats, module-specific saved feedback/assignments, clipboard denial, long-prompt fallback and mobile layout. It does not verify ChatGPT’s current prefill behaviour, subscription status, microphone availability or voice features on the learner’s device.
